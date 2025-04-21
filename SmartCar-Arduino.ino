@@ -1,9 +1,16 @@
 #include <LiquidCrystal.h>
 #include "functions.h"
 
-const uint8_t doorPin = 15;
-const uint8_t buttonPin = 16;
-const uint8_t motorPin = 14;
+const uint8_t switchPin = 20;
+const uint8_t motorStartButton = 14;
+const uint8_t motorPin = 18;
+const uint8_t fuelPin = A0;          // Potentiometer input pin
+const uint8_t LDRPin = A1;          // LDR input pin
+const uint8_t temperaturePin = A2;      // Potentiometer input pin
+const uint8_t yellowPin = 11;       // Yellow LED pin
+const uint8_t bluePin = 6;      // Blue LED pin
+const uint8_t airconPin = 19; // Air conditioning pin.
+const uint8_t seatBeltButton = 17; // Seat belt pin
 
 // Initialize LCD
 LiquidCrystal lcd(12, 7, 5, 4, 3, 2);
@@ -15,12 +22,22 @@ const uint8_t BLUE_PIN = 8;
 
 unsigned long lastButtonPressTime = 0;
 
-bool switchClosed;
+bool permission = true;
+bool doorClosed;
+bool headlightsOn;
+bool airconOn;
+bool seatBeltOn;
+
+
 
 void setup() {
-  pinMode(doorPin, INPUT_PULLUP);
-  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(switchPin, INPUT_PULLUP);
+  pinMode(motorStartButton, INPUT_PULLUP);
   pinMode(motorPin, OUTPUT);
+  pinMode(airconPin, OUTPUT);
+  pinMode(yellowPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+  
 
   lcd.begin(16, 2);
 
@@ -28,6 +45,10 @@ void setup() {
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
+  
+  checkdoor(true);
+  checkLDRLevel(true);
+  checkTemperature(true);
 
   delay(100);
   // Uncomment to show welcome message
@@ -35,12 +56,22 @@ void setup() {
 }
 
 
+
 void loop() {
 
-  switchClosed = checkSwitch();
+
+  doorClosed = checkdoor();
+  headlightsOn = checkLDRLevel();
+  
+  
+  airconOn = checkTemperature();
+
+  checkFuelLevel(); 
 
   // Button debounce logic
-  checkButtonPressed();
+  checkMotorButton();
+  seatBeltOn = checkSeatBelt();
+
 }
 
 
