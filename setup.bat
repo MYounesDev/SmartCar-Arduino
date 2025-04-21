@@ -10,4 +10,7 @@ arduino-cli lib install LiquidCrystal
 :: Install Arduino Mega 2560 core
 arduino-cli core install arduino:avr
 
+:: Install LiquidCrystal library
+arduino-cli lib install "LiquidCrystal"
+
 echo Setup complete.

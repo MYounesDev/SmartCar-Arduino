@@ -4,6 +4,7 @@
 extern const uint8_t doorPin;
 extern const uint8_t buttonPin;
 extern const uint8_t motorPin;
+extern const uint8_t potPin;          // Potentiometer input pin
 
 extern LiquidCrystal lcd;
 
@@ -27,7 +28,7 @@ void pink(bool on);
 
 void toggle(uint8_t pin) {
     digitalWrite(pin, !digitalRead(pin));
-  }
+}
   
 void off(uint8_t pin) {
     digitalWrite(pin, LOW);
@@ -55,14 +56,16 @@ void checkButtonPressed(){
 
 
 
+
 bool checkSwitch(){
-  bool switchState = (digitalRead(doorPin) == LOW);
+  
+  bool currentSwitchState = (digitalRead(doorPin) == LOW);
 
 
-  if (switchState == switchClosed)
-    return switchState;
+  if (currentSwitchState == switchClosed)
+    return currentSwitchState;
 
-  if (switchState) {
+  if (currentSwitchState) {
     // If switch is on
     pink(false);
     lcd.clear();
@@ -75,10 +78,10 @@ bool checkSwitch(){
     lcd.print("Uyari: Kapi Acik");
     lcd.setCursor(0, 1);
     lcd.print("Motor Calismaz");
-  }
+    }
 
 
-  return switchState;
+  return currentSwitchState;
 }
 
 // RGB LED control function for pink color
@@ -93,17 +96,6 @@ void pink(bool on) {
     analogWrite(BLUE_PIN, 0);   // Blue off
   }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -135,7 +127,7 @@ void typingEffect(String text, int col, int row, int speed) {
     }
 }
   
-  // Scroll message
+// Scroll message
 void scrollMessage(String message, int speed, int row) {
     int messageLength = message.length();
     int colStart = (row == 0) ? 16 : -messageLength;
