@@ -1,5 +1,7 @@
 #include <LiquidCrystal.h>
-#include "functions.h"
+#include "checkFunctions.h"
+
+
 
 const uint8_t bluePin = 6;      // Blue LED pin
 const uint8_t yellowPin = 11;       // Yellow LED pin
@@ -13,6 +15,7 @@ const uint8_t switchPin = 21;
 const uint8_t fuelPin = A0;          // Potentiometer input pin
 const uint8_t LDRPin = A1;          // LDR input pin
 const uint8_t temperaturePin = A2;      // Potentiometer input pin
+
 
 
 // Initialize LCD
@@ -53,36 +56,27 @@ void setup() {
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
   
-  checkdoor(true);
-  checkLDRLevel(true);
-  checkTemperature(true);
+  doorClosed = checkdoor(true);
+  headlightsOn = checkLDRLevel(true);
+  airconOn = checkTemperature(true);
 
   
   // Uncomment to show welcome message
-  WELCOME();
+  //WELCOME();
 }
 
 
 
 void loop() {
 
-
   doorClosed = checkdoor();
   headlightsOn = checkLDRLevel();
   
-  
   airconOn = checkTemperature();
   seatBeltOn = checkSeatBelt();
-
   
   checkFuelLevel(); 
   
   checkMotorButton();
 
 }
-
-
-
-
-
-
