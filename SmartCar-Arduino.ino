@@ -1,16 +1,19 @@
 #include <LiquidCrystal.h>
 #include "functions.h"
 
-const uint8_t switchPin = 20;
+const uint8_t bluePin = 6;      // Blue LED pin
+const uint8_t yellowPin = 11;       // Yellow LED pin
+const uint8_t redPin = 13;        // Red LED pin
 const uint8_t motorStartButton = 14;
+const uint8_t seatBeltButton = 17; // Seat belt pin
 const uint8_t motorPin = 18;
+const uint8_t airconPin = 19; // Air conditioning pin.
+const uint8_t buzzerPin = 20; // Buzzer pin
+const uint8_t switchPin = 21;
 const uint8_t fuelPin = A0;          // Potentiometer input pin
 const uint8_t LDRPin = A1;          // LDR input pin
 const uint8_t temperaturePin = A2;      // Potentiometer input pin
-const uint8_t yellowPin = 11;       // Yellow LED pin
-const uint8_t bluePin = 6;      // Blue LED pin
-const uint8_t airconPin = 19; // Air conditioning pin.
-const uint8_t seatBeltButton = 17; // Seat belt pin
+
 
 // Initialize LCD
 LiquidCrystal lcd(12, 7, 5, 4, 3, 2);
@@ -33,10 +36,14 @@ bool seatBeltOn;
 void setup() {
   pinMode(switchPin, INPUT_PULLUP);
   pinMode(motorStartButton, INPUT_PULLUP);
+  pinMode(seatBeltButton, INPUT_PULLUP);
   pinMode(motorPin, OUTPUT);
   pinMode(airconPin, OUTPUT);
   pinMode(yellowPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
+  pinMode(redPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  
   
 
   lcd.begin(16, 2);
@@ -65,12 +72,12 @@ void loop() {
   
   
   airconOn = checkTemperature();
-
-  checkFuelLevel(); 
-
-  // Button debounce logic
-  checkMotorButton();
   seatBeltOn = checkSeatBelt();
+
+  
+  checkFuelLevel(); 
+  
+  checkMotorButton();
 
 }
 

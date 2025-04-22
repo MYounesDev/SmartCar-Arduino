@@ -7,10 +7,12 @@ extern const uint8_t potPin;         // Potentiometer input pin
 extern const uint8_t fuelPin;        // Potentiometer input pin
 extern const uint8_t yellowPin;      // Yellow LED pin
 extern const uint8_t bluePin;        // Blue LED pin
+extern const uint8_t redPin;         // Red LED pin
 extern const uint8_t LDRPin;         // LDR input pin
 extern const uint8_t temperaturePin; // Potentiometer input pin
 extern const uint8_t airconPin;      // Air conditioning pin
 extern const uint8_t seatBeltButton; // Seat belt pin
+extern const uint8_t buzzerPin;     // Buzzer pin
 
 extern LiquidCrystal lcd;
 
@@ -30,7 +32,7 @@ void off(uint8_t pin);
 void on(uint8_t pin);
  
 bool checkdoor(bool firstTime = false);
-bool checkSeatBelt(bool firstTime = false);
+bool checkSeatBelt();
 bool checkLDRLevel(bool firstTime = false);
 bool checkTemperature(bool firstTime = false);
 void checkMotorButton();
@@ -69,7 +71,7 @@ void checkMotorButton()
 
     if (digitalRead(motorPin))
       off(motorPin);
-    else if (doorClosed)
+    else if (doorClosed && seatBeltOn && permission)
       on(motorPin);
   }
 }
@@ -121,7 +123,9 @@ int checkFuelLevel()
   }
   else if (fuelPercentage > 10)
   {
+    if (!permission || digitalRead(yellowPin))lcd.clear();
     permission = true;
+    digitalWrite(yellowPin, LOW);
   }
 }
 
@@ -152,7 +156,7 @@ bool checkdoor(bool firstTime = false)
 
   return currentdoorState;
 }
-bool checkSeatBelt(bool firstTime = false)
+bool checkSeatBelt()
 {
 
   bool currentSeatBeltState = (digitalRead(seatBeltButton) == LOW); // Adjusted for button logic
@@ -161,11 +165,17 @@ bool checkSeatBelt(bool firstTime = false)
     lastButtonPressTime = millis(); // Record the time of button press
     if (digitalRead(redPin))
     {
+      lcd.clear();
       off(redPin);
       off(buzzerPin);
     }
     else{
+      lcd.clear();
+      lcd.print("Emniyet Kemeri");
+      lcd.setCursor(0, 1);
+      lcd.print("Takili Degil!");
       on(redPin);
+      off(motorPin);
       on(buzzerPin);
     }
   }
@@ -195,7 +205,7 @@ bool checkLDRLevel(bool firstTime = false)
       lcd.clear();
       if (!firstTime)
       {
-        lcd.print("Farlar Kapali");
+        lcd.print("Farlar Kapandi");
         lcd.setCursor(0, 1);
         delay(1000);
         lcd.clear();
