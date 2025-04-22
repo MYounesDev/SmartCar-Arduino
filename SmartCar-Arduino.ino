@@ -57,9 +57,9 @@ void setup() {
   checkLDRLevel(true);
   checkTemperature(true);
 
-  delay(100);
+  
   // Uncomment to show welcome message
-  //WELCOME();
+  WELCOME();
 }
 
 

@@ -101,7 +101,7 @@ int checkFuelLevel()
     lcd.print(fuelPercentage);
     for (int i = 0; i < 5; i++)
     {
-      digitalWrite(yellowPin, LOW); // Turn off yellow LED if fuel is low
+      off(yellowPin); // Turn off yellow LED if fuel is low
       delay(50);
       digitalWrite(yellowPin, HIGH); // Turn on yellow LED if fuel is low
       delay(50);
@@ -110,11 +110,15 @@ int checkFuelLevel()
   else if (fuelPercentage < 1)
   {
 
-    digitalWrite(yellowPin, LOW);
+    off(yellowPin);
     permission = false; // Turn off yellow LED if fuel is empty
-    // TO-DO: turn off all leds!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+    off(bluePin);
+    off(redPin);
+    off(airconPin);
+    off(buzzerPin);
     off(motorPin);
+    pink(false);
 
     lcd.clear();
     lcd.print("Yakit Bitti");
@@ -125,7 +129,7 @@ int checkFuelLevel()
   {
     if (!permission || digitalRead(yellowPin))lcd.clear();
     permission = true;
-    digitalWrite(yellowPin, LOW);
+    off(yellowPin);
   }
 }
 
