@@ -45,7 +45,7 @@ void setup() {
   pinMode(yellowPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   pinMode(redPin, OUTPUT);
-  pinMode(buzzerPin, OUTPUT);
+ // pinMode(buzzerPin, OUTPUT);
   
   
 
@@ -62,7 +62,7 @@ void setup() {
 
   
   // Uncomment to show welcome message
-  //WELCOME();
+  WELCOME();
 }
 
 

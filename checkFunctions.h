@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-#include "other.h"
+#include "others.h"
 
 
 extern const uint8_t switchPin;
@@ -83,14 +83,14 @@ int checkFuelLevel()
   }
   else if (fuelPercentage < 1)
   {
-
-    off(yellowPin);
+    
     permission = false; // Turn off yellow LED if fuel is empty
-
+    
+    off(yellowPin);
     off(bluePin);
     off(redPin);
     off(airconPin);
-    off(buzzerPin);
+    noTone(buzzerPin);
     off(motorPin);
     pink(false);
 
@@ -146,7 +146,7 @@ bool checkSeatBelt()
     {
       lcd.clear();
       off(redPin);
-      off(buzzerPin);
+      noTone(buzzerPin);
     }
     else{
       lcd.clear();
@@ -155,7 +155,7 @@ bool checkSeatBelt()
       lcd.print("Takili Degil!");
       on(redPin);
       off(motorPin);
-      on(buzzerPin);
+      tone(buzzerPin,1000);
     }
   }
 
