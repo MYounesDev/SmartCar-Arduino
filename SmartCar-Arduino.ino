@@ -26,7 +26,6 @@ const uint8_t RED_PIN = 10;
 const uint8_t GREEN_PIN = 9;
 const uint8_t BLUE_PIN = 8;
 
-unsigned long lastButtonPressTime = 0;
 
 bool permission = true;
 bool doorClosed;
@@ -45,7 +44,6 @@ void setup() {
   pinMode(yellowPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   pinMode(redPin, OUTPUT);
- // pinMode(buzzerPin, OUTPUT);
   
   
 

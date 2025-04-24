@@ -1,7 +1,6 @@
 #include <LiquidCrystal.h>
 #include "others.h"
 
-
 extern const uint8_t switchPin;
 extern const uint8_t motorStartButton;
 extern const uint8_t motorPin;
@@ -17,16 +16,11 @@ extern const uint8_t buzzerPin;      // Buzzer pin
 
 extern LiquidCrystal lcd;
 
-extern unsigned long lastButtonPressTime;
 extern bool permission;
 extern bool doorClosed;
 extern bool headlightsOn;
 extern bool airconOn;
 extern bool seatBeltOn;
-
-
-
-
 
 bool checkdoor(bool firstTime = false);
 bool checkSeatBelt();
@@ -35,19 +29,13 @@ bool checkTemperature(bool firstTime = false);
 void checkMotorButton();
 int checkFuelLevel();
 
-
 void checkMotorButton()
 {
   bool buttonPressed = (digitalRead(motorStartButton) == LOW);
-  if (buttonPressed && (millis() - lastButtonPressTime) > 200)
-  {
-    lastButtonPressTime = millis(); // Record the time of button press
-
-    if (digitalRead(motorPin))
-      off(motorPin);
-    else if (doorClosed && seatBeltOn && permission)
-      on(motorPin);
-  }
+  if (buttonPressed && doorClosed && seatBeltOn && permission)
+    on(motorPin);
+  else
+    off(motorPin); // Turn off motor if button is not pressed or conditions are not met
 }
 
 int checkFuelLevel()
@@ -57,7 +45,7 @@ int checkFuelLevel()
 
   if (fuelPercentage < 10 && fuelPercentage >= 5)
   {
-    digitalWrite(yellowPin, HIGH); // Turn on yellow LED if fuel is low
+    on(yellowPin); // Turn on yellow LED if fuel is low
     lcd.clear();
     lcd.print("Yakit Seviyesi");
     lcd.setCursor(0, 1);
@@ -77,15 +65,15 @@ int checkFuelLevel()
     {
       off(yellowPin); // Turn off yellow LED if fuel is low
       delay(49);
-      digitalWrite(yellowPin, HIGH); // Turn on yellow LED if fuel is low
+      on(yellowPin); // Turn on yellow LED if fuel is low
       delay(49);
     }
   }
   else if (fuelPercentage < 1)
   {
-    
+
     permission = false; // Turn off yellow LED if fuel is empty
-    
+
     off(yellowPin);
     off(bluePin);
     off(redPin);
@@ -101,7 +89,8 @@ int checkFuelLevel()
   }
   else if (fuelPercentage > 10)
   {
-    if (!permission || digitalRead(yellowPin))lcd.clear();
+    if (!permission || digitalRead(yellowPin))
+      lcd.clear();
     permission = true;
     off(yellowPin);
   }
@@ -139,24 +128,21 @@ bool checkSeatBelt()
 {
 
   bool currentSeatBeltState = (digitalRead(seatBeltButton) == LOW); // Adjusted for button logic
-  if (currentSeatBeltState && (millis() - lastButtonPressTime) > 200)
+  if (currentSeatBeltState)
   {
-    lastButtonPressTime = millis(); // Record the time of button press
-    if (digitalRead(redPin))
-    {
-      lcd.clear();
-      off(redPin);
-      noTone(buzzerPin);
-    }
-    else{
-      lcd.clear();
-      lcd.print("Emniyet Kemeri");
-      lcd.setCursor(0, 1);
-      lcd.print("Takili Degil!");
-      on(redPin);
-      off(motorPin);
-      tone(buzzerPin,1000);
-    }
+    lcd.clear();
+    off(redPin);
+    noTone(buzzerPin);
+  }
+  else
+  {
+    lcd.clear();
+    lcd.print("Emniyet Kemeri");
+    lcd.setCursor(0, 1);
+    lcd.print("Takili Degil!");
+    on(redPin);
+    off(motorPin);
+    tone(buzzerPin, 1000);
   }
 
   return !digitalRead(redPin);
