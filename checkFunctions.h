@@ -73,12 +73,12 @@ int checkFuelLevel()
     lcd.setCursor(0, 1);
     lcd.print("Cok Dusuk - %");
     lcd.print(fuelPercentage);
-    for (int i = 0; i < 5; i++)
+    for (int time = 0; time < 2; time++)
     {
       off(yellowPin); // Turn off yellow LED if fuel is low
-      delay(50);
+      delay(49);
       digitalWrite(yellowPin, HIGH); // Turn on yellow LED if fuel is low
-      delay(50);
+      delay(49);
     }
   }
   else if (fuelPercentage < 1)
