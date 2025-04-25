@@ -31,7 +31,7 @@ int checkFuelLevel();
 
 void checkMotorButton()
 {
-  bool buttonPressed = (digitalRead(motorStartButton) == LOW);
+  bool buttonPressed = (get(motorStartButton) == LOW);
   if (buttonPressed && doorClosed && seatBeltOn && permission)
     on(motorPin);
   else
@@ -89,7 +89,7 @@ int checkFuelLevel()
   }
   else if (fuelPercentage > 10)
   {
-    if (!permission || digitalRead(yellowPin))
+    if (!permission || get(yellowPin))
       lcd.clear();
     permission = true;
     off(yellowPin);
@@ -98,7 +98,7 @@ int checkFuelLevel()
 
 bool checkdoor(bool firstTime = false)
 {
-  bool currentdoorState = (digitalRead(switchPin) == LOW);
+  bool currentdoorState = (get(switchPin) == LOW);
 
   if (currentdoorState == doorClosed && !firstTime)
     return currentdoorState;
@@ -127,25 +127,29 @@ bool checkdoor(bool firstTime = false)
 bool checkSeatBelt()
 {
 
-  bool currentSeatBeltState = (digitalRead(seatBeltButton) == LOW); // Adjusted for button logic
+  bool currentSeatBeltState = (get(seatBeltButton) == LOW); // Adjusted for button logic
   if (currentSeatBeltState)
   {
-    lcd.clear();
+    if (get(redPin))
+      lcd.clear();
     off(redPin);
     noTone(buzzerPin);
   }
   else
   {
-    lcd.clear();
-    lcd.print("Emniyet Kemeri");
-    lcd.setCursor(0, 1);
-    lcd.print("Takili Degil!");
+    if (!get(redPin))
+    {
+      lcd.clear();
+      lcd.print("Emniyet Kemeri");
+      lcd.setCursor(0, 1);
+      lcd.print("Takili Degil!");
+    }
     on(redPin);
     off(motorPin);
     tone(buzzerPin, 1000);
   }
 
-  return !digitalRead(redPin);
+  return !get(redPin);
 }
 
 bool checkLDRLevel(bool firstTime = false)

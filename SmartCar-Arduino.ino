@@ -59,7 +59,6 @@ void setup() {
   airconOn = checkTemperature(true);
 
   
-  // Uncomment to show welcome message
   WELCOME();
 }
 

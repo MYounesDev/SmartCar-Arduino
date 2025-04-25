@@ -12,6 +12,7 @@ extern bool permission;
 void toggle(uint8_t pin);
 void off(uint8_t pin);
 void on(uint8_t pin);
+bool get(uint8_t pin);
 
 
 void pink(bool on);
@@ -94,4 +95,10 @@ void scrollMessage(String message, int speed, int row)
     lcd.print(message);
     delay(speed);
   }
+}
+
+
+bool get(uint8_t pin)
+{
+  return digitalRead(pin);
 }
